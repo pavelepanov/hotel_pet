@@ -1,6 +1,6 @@
-from sqlalchemy import Table, Column, Integer, String, JSON, TIMESTAMP, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, JSON, TIMESTAMP, ForeignKey, MetaData
 
-from database import metadata
+metadata = MetaData()
 
 booking = Table(
     "booking",
