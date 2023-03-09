@@ -5,17 +5,19 @@ from typing import TypeVar, Type, Optional
 from database import Base, get_async_session
 from repository.enum import SynchronizeSessionEnum
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
+
 ModelType = TypeVar("ModelType", bound=Base)
 
 
 class BaseRepo:
     def __init__(self, model: Type[ModelType]):
         self.model = model
-        self.session = get_async_session()
 
-    async def get_by_id(self, id: int) -> Optional[ModelType]:
-        query = select(self.model).where(self.model.id == id)
-        return await self.session.execute(query).scalars().frist()
+    async def get_by_id(self, id: int, session: AsyncSession) -> Optional[ModelType]:
+        result = await session.execute(select(self.model).where(self.model.id == id))
+        return result.scalars().all()
 
     async def update_by_id(self,
                            id: int,
