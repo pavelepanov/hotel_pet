@@ -1,3 +1,6 @@
+from typing import List
+from urllib.request import Request
+
 from fastapi import APIRouter
 
 from database import get_async_session
@@ -8,12 +11,15 @@ from hotels.models import Hotel, Room
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from hotels.shemas import Hotel
+
+
 router = APIRouter(
     prefix="/hotels",
 )
 
-# Переписать на вхождение строки
-@router.get("/{location}")
+
+@router.get("/{location}", response_model=List[Hotel])
 async def get_all_hotels_with_date_from_to_location(location: str, session: AsyncSession = Depends(get_async_session)):
     repo = BaseRepo(Hotel)
     result = await repo.get_hotels_by_location(location, session)

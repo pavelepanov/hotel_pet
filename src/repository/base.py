@@ -1,11 +1,10 @@
 from sqlalchemy import select, update, delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from typing import TypeVar, Type, Optional
 
-from database import Base, get_async_session
+from database import Base
 from repository.enum import SynchronizeSessionEnum
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 ModelType = TypeVar("ModelType", bound=Base)
@@ -24,7 +23,7 @@ class BaseRepo:
         return result
 
     async def get_hotels_by_location(self, location: str, session: AsyncSession) -> Optional[ModelType]:
-        result = await session.execute(select(self.model).where(self.model.location == location))
+        result = await session.execute(select(self.model).filter(self.model.location.like(f"%{location}%")))
         return result.scalars().all()
 
     async def update_by_id(self,
