@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-class Hotel(BaseModel):
+class SHotel(BaseModel):
     category_id: int
     services: List[str]
     images_id: List[str]
@@ -11,4 +11,7 @@ class Hotel(BaseModel):
     id: int
     location: str
     rooms_quantity: int
+
+    class Config:
+        orm_mode = True
 
