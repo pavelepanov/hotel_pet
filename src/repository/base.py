@@ -14,18 +14,6 @@ class BaseRepo:
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
-    async def get_by_id(self, id: int, session: AsyncSession) -> Optional[ModelType]:
-        result = await session.execute(select(self.model).where(self.model.id == id))
-        return result.scalars().all()
-
-    async def get_rooms_by_id_hotel(self, id: int, session: AsyncSession) -> Optional[ModelType]:
-        result = await session.execute(select(self.model).where(self.model.hotel_id == id))
-        return result
-
-    async def get_hotels_by_location(self, location: str, session: AsyncSession) -> Optional[ModelType]:
-        result = await session.execute(select(self.model).filter(self.model.location.like(f"%{location}%")))
-        return result.scalars().all()
-
     async def update_by_id(self,
                            id: int,
                            params: dict,
