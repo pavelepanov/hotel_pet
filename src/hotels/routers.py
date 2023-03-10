@@ -26,7 +26,7 @@ async def get_all_hotels_with_date_from_to_location(location: str, session: Asyn
     return result
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=List[SHotel])
 async def get_hotel_info_with_id(id: int, session: AsyncSession = Depends(get_async_session)):
     repo = RepositoryHotels(Hotel)
     result = await repo.get_by_id(id, session)
@@ -38,3 +38,4 @@ async def get_rooms_by_hotel(id: int, session: AsyncSession = Depends(get_async_
     repo = RepositoryHotels(Room)
     result = await repo.get_rooms_by_id_hotel(id, session)
     return result
+
