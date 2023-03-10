@@ -12,7 +12,7 @@ router = APIRouter(
     prefix="/hotels",
 )
 
-
+# Переписать на вхождение строки
 @router.get("/{location}")
 async def get_all_hotels_with_date_from_to_location(location: str, session: AsyncSession = Depends(get_async_session)):
     repo = BaseRepo(Hotel)
