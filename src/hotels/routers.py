@@ -11,7 +11,7 @@ from hotels.models import Hotel, Room
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from hotels.shemas import SHotel
+from hotels.shemas import SHotel, SRoom
 
 
 router = APIRouter(
@@ -33,7 +33,7 @@ async def get_hotel_info_with_id(id: int, session: AsyncSession = Depends(get_as
     return result
 
 
-@router.get("/{id}/rooms")
+@router.get("/{id}/rooms", response_model=List[SRoom])
 async def get_rooms_by_hotel(id: int, session: AsyncSession = Depends(get_async_session)):
     repo = RepositoryHotels(Room)
     result = await repo.get_rooms_by_id_hotel(id, session)
