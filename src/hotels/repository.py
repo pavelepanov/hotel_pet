@@ -4,6 +4,8 @@ from bookings.models import Booking
 from repository.base import BaseRepo
 from sqlalchemy import func
 
+from datetime import date
+
 from sqlalchemy import select, and_
 
 from typing import Optional, TypeVar
@@ -39,8 +41,8 @@ class RepositoryRooms(BaseRepo):
             return result.scalars().all()
 
     @classmethod
-    async def get_rooms_by_hotel_dateto_datefrom(cls, hotel_id: int) -> Optional[ModelType]:
+    async def get_rooms_by_hotel_dateto_datefrom(cls, hotel_id: int, date_from: date, date_to: date) -> Optional[ModelType]:
         async with async_session_maker() as session:
-            result_one = await session.execute(select(func.count(cls.model.id)).join(cls.booking, and_(cls.model.hotel_id == hotel_id, cls.booking.room_id == cls.model.id)))
+            result_one = await session.execute(select(func.count(cls.model.id)).join(cls.booking, and_(cls.model.hotel_id == hotel_id, cls.booking.room_id == cls.model.id)).where(and_(cls.booking.date_to == date_to, cls.booking.date_from == date_from)))
             result_two = await session.execute(select(cls.hotel.rooms_quantity).where(cls.hotel.id == hotel_id))
             return result_two.scalars().all()[0] - result_one.scalars().all()[0]

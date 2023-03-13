@@ -6,6 +6,8 @@ from hotels.repository import RepositoryHotels, RepositoryRooms
 
 from hotels.shemas import SHotel, SRoom
 
+from datetime import date
+
 
 router = APIRouter(
     prefix="/hotels",
@@ -30,8 +32,8 @@ async def get_rooms_by_hotel(id: int):
     return result
 
 
-@router.get("/{hotel_id}/privet")
-async def get_rooms_by_hotel_dateto_datefrom(hotel_id: int):
-    result = await RepositoryRooms.get_rooms_by_hotel_dateto_datefrom(hotel_id)
+@router.get("/{hotel_id}/{date_from}/{date_to}")
+async def get_rooms_by_hotel_dateto_datefrom(hotel_id: int, date_from: date, date_to: date):
+    result = await RepositoryRooms.get_rooms_by_hotel_dateto_datefrom(hotel_id, date_from, date_to)
     return result
 
