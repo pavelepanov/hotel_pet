@@ -29,3 +29,9 @@ async def get_rooms_by_hotel(id: int):
     result = await RepositoryRooms.get_rooms_by_id_hotel(id)
     return result
 
+
+@router.get("/{hotel_id}/privet")
+async def get_rooms_by_hotel_dateto_datefrom(hotel_id: int):
+    result = await RepositoryRooms.get_rooms_by_hotel_dateto_datefrom(hotel_id)
+    return result
+
