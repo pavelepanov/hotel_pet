@@ -1,8 +1,8 @@
-from sqlalchemy import select, update, delete
+from sqlalchemy import update, delete
 
 from typing import TypeVar, Type
 
-from database import Base
+from database import Base, async_session_maker
 
 
 ModelType = TypeVar("ModelType", bound=Base)
@@ -21,11 +21,14 @@ class BaseRepo:
             .where(self.model.id == id)
             .values(**params)
         )
-        await self.session.execute(query)
-        await self.session.commit()
+        with async_session_maker() as session:
+            await session.execute(query)
+            await session.commit()
 
     async def delete(self, model: ModelType) -> None:
-        await self.session.selete(model)
+        with async_session_maker() as session:
+            await session.delete(model)
+            await session.commit()
 
     async def delete_by_id(
         self,
@@ -35,7 +38,9 @@ class BaseRepo:
             delete(self.model)
             .where(self.model.id == id)
         )
-        await self.session.execute(query)
+        with async_session_maker() as session:
+            await session.execute(query)
+            await session.commit()
 
     async def save(self, model: ModelType) -> ModelType:
         saved = await self.session.add(model)
