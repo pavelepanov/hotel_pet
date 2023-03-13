@@ -12,7 +12,7 @@ class Hotel(Base):
     category_id = Column(Integer, ForeignKey("hotel_category.id"), nullable=False)
     location = Column(String(140), nullable=False)
     services = Column(JSON, nullable=False)
-    rooms_quantity = Column(Integer, nullable=False)
+    rooms_quantity = Column(Integer, nullable=False) # Бронирование. Сумма номеров
     images_id = Column(JSON, nullable=False)
     hotel_category = relationship("HotelCategory")
 

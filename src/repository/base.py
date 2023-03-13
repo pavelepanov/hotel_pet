@@ -1,10 +1,8 @@
 from sqlalchemy import select, update, delete
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from typing import TypeVar, Type, Optional
+from typing import TypeVar, Type
 
 from database import Base
-from repository.enum import SynchronizeSessionEnum
 
 
 ModelType = TypeVar("ModelType", bound=Base)
@@ -17,15 +15,14 @@ class BaseRepo:
     async def update_by_id(self,
                            id: int,
                            params: dict,
-                           synchronize_session: SynchronizeSessionEnum = False,
                            ) -> None:
         query = (
             update(self.model)
             .where(self.model.id == id)
             .values(**params)
-            .execution_options(synchronize_session=synchronize_session)
         )
         await self.session.execute(query)
+        await self.session.commit()
 
     async def delete(self, model: ModelType) -> None:
         await self.session.selete(model)
@@ -33,12 +30,10 @@ class BaseRepo:
     async def delete_by_id(
         self,
         id: int,
-        synchronize_session: SynchronizeSessionEnum = False,
     ) -> None:
         query = (
             delete(self.model)
             .where(self.model.id == id)
-            .execution_options(synchronize_session=synchronize_session)
         )
         await self.session.execute(query)
 
